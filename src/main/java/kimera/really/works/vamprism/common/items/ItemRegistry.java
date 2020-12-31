@@ -19,4 +19,5 @@ public class ItemRegistry
 
     public static final RegistryObject<Item> FANKRYSTAL_ORE = ITEMS.register("fankrystal_ore", () -> new BlockItem(BlockRegistry.FANKRYSTAL_ORE.get(), new Item.Properties().group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> FANKRYSTAL_BLOCK = ITEMS.register("fankrystal_block", () -> new BlockItem(BlockRegistry.FANKRYSTAL_BLOCK.get(), new Item.Properties().group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> SUNLIGHT_POOL = ITEMS.register("sunlight_pool", () -> new BlockItem(BlockRegistry.SUNLIGHT_POOL.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
 }

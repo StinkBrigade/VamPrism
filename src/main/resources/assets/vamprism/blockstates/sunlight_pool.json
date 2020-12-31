@@ -1,0 +1,24 @@
+{
+	"variants" :
+	{
+		"facing=east" :
+		{
+			"model" : "vamprism:block/sunlight_pool",
+			"y": 90
+		},
+		"facing=north" :
+		{
+			"model" : "vamprism:block/sunlight_pool"
+		},
+		"facing=south" :
+		{
+			"model" : "vamprism:block/sunlight_pool",
+			"y": 180
+		},
+		"facing=west" :
+		{
+			"model" : "vamprism:block/sunlight_pool",
+			"y": 270
+		}
+	}
+}

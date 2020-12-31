@@ -21,6 +21,7 @@ public class ClientSetup
         event.enqueueWork(() ->
         {
             RenderTypeLookup.setRenderLayer(BlockRegistry.FANKRYSTAL_BLOCK.get(), RenderType.getTranslucent());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.SUNLIGHT_POOL.get(), RenderType.getTranslucent());
         });
     }
 }
