@@ -1,0 +1,37 @@
+modLoader="javafml" #mandatory
+loaderVersion="[35,)" #mandatory
+license="All rights reserved"
+issueTrackerURL="http://my.issue.tracker/" #optional
+
+[[mods]] #mandatory
+
+modId="vamprism" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="VamPrism" #mandatory
+displayURL="https://www.curseforge.com/minecraft/mc-mods/vamprism/" #optional
+logoFile="vamprism_logo.png" #optional
+authors="Kim Royal" #optional
+description='''
+Vamprism
+'''
+[[dependencies.coalstone]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[35,)" #mandatory
+
+[[dependencies.coalstone]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.4,1.17)"
+
+[[dependencies.coalstone]]
+    modId="patchouli"
+    mandatory=false
+    versionRange="[1.16.4-48,)"
+
+[[dependencies.coalstone]]
+    modId="jei"
+    mandatory=false
+    versionRange="[7.6.0.58,)"
+
+
