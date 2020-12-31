@@ -14,6 +14,6 @@ public class BlockRegistry
 {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, VamPrism.MODID);
 
-    public static final RegistryObject<Block> FANKRYSTAL_ORE = BLOCKS.register("fankrystal_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().harvestLevel(2)));
-    public static final RegistryObject<Block> FANKRYSTAL_BLOCK = BLOCKS.register("fankrystal_block", () -> new BreakableBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().setRequiresTool().harvestLevel(2)));
+    public static final RegistryObject<Block> FANKRYSTAL_ORE = BLOCKS.register("fankrystal_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().harvestLevel(2).hardnessAndResistance(3.0F, 3.0F)));
+    public static final RegistryObject<Block> FANKRYSTAL_BLOCK = BLOCKS.register("fankrystal_block", () -> new BreakableBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().setRequiresTool().harvestLevel(2).hardnessAndResistance(2.0F, 4.0F)));
 }
