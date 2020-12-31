@@ -1,0 +1,6 @@
+{
+	"variants" :
+	{
+		"" : { "model" : "vamprism:block/fankrystal_block" }
+	}
+}

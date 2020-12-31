@@ -1,5 +1,7 @@
 package kimera.really.works.vamprism;
 
+import kimera.really.works.vamprism.common.blocks.BlockRegistry;
+import kimera.really.works.vamprism.common.items.ItemRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -18,5 +20,8 @@ public class VamPrism
     public VamPrism()
     {
         EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ItemRegistry.ITEMS.register(EVENT_BUS);
+        BlockRegistry.BLOCKS.register(EVENT_BUS);
     }
 }
