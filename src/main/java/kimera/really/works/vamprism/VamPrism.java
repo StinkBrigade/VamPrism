@@ -1,7 +1,10 @@
 package kimera.really.works.vamprism;
 
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
+import kimera.really.works.vamprism.common.events.EventHandler;
 import kimera.really.works.vamprism.common.items.ItemRegistry;
+import kimera.really.works.vamprism.common.tileentity.TileEntityRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -24,5 +27,7 @@ public class VamPrism
         ItemRegistry.ITEMS.register(EVENT_BUS);
         BlockRegistry.BLOCKS.register(EVENT_BUS);
         TileEntityRegistry.TILE_ENTITIES.register(EVENT_BUS);
+
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 }
