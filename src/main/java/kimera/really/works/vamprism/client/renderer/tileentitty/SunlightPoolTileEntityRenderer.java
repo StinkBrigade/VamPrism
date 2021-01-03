@@ -38,7 +38,7 @@ public class SunlightPoolTileEntityRenderer extends TileEntityRenderer<SunlightP
     private static final int BEAM_FRAME_WIDTH = 8;
     private static final int BEAM_FRAME_HEIGHT = 16;
 
-    private static final int BEAM_SEGMENTS = 32;
+    private static final int BEAM_SEGMENTS = 16;
 
     private static final float BEAM_WIDTH_PROPORTION = ((float) BEAM_FRAME_WIDTH) / ((float) BEAM_TEXTURE_WIDTH);
     private static final float BEAM_HEIGHT_PROPORTION = ((float) BEAM_FRAME_HEIGHT) / ((float) BEAM_TEXTURE_HEIGHT);
