@@ -5,6 +5,8 @@
 
   "block.vamprism.fankrystal_ore" : "Fankrystal Ore",
   "block.vamprism.fankrystal_block" : "Fankrystal Block",
+  "block.vamprism.iron_coil" : "Iron Coil",
 
-  "block.vamprism.sunlight_pool" : "Sunlight Pool"
+  "block.vamprism.sunlight_pool" : "Sunlight Pool",
+  "block.vamprism.prismatic_tesla" : "Prismatic Tesla"
 }

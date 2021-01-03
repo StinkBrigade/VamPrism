@@ -1,0 +1,92 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "vamprism:block/sunlight_pool_base_side_connecter",
+		"1": "vamprism:block/sunlight_pool_base_bottom",
+		"2": "vamprism:block/sunlight_pool_base_side",
+		"3": "vamprism:block/tesla_coil",
+		"particle": "vamprism:block/sunlight_pool_base_side_connecter"
+	},
+	"elements": [
+		{
+			"name": "Bottom",
+			"from": [0, 0, 0],
+			"to": [16, 8, 16],
+			"faces": {
+				"north": {"uv": [0, 4, 16, 12], "texture": "#0"},
+				"east": {"uv": [0, 3, 16, 11], "texture": "#2"},
+				"south": {"uv": [0, 8, 16, 16], "texture": "#2"},
+				"west": {"uv": [0, 0, 16, 8], "texture": "#2"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [3, 8, 3],
+			"to": [13, 12, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, 16, 11]},
+			"faces": {
+				"north": {"uv": [3, 12, 13, 16], "texture": "#2"},
+				"east": {"uv": [3, 8, 13, 12], "texture": "#2"},
+				"south": {"uv": [3, 1, 13, 5], "texture": "#2"},
+				"west": {"uv": [3, 10, 13, 14], "texture": "#2"},
+				"up": {"uv": [3, 3, 13, 13], "texture": "#1"},
+				"down": {"uv": [3, 3, 13, 13], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Segment 2",
+			"from": [5, 28, 5],
+			"to": [11, 30, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 24, 13]},
+			"faces": {
+				"north": {"uv": [1, 14, 7, 16], "texture": "#3"},
+				"east": {"uv": [1, 14, 7, 16], "texture": "#3"},
+				"south": {"uv": [1, 14, 7, 16], "texture": "#3"},
+				"west": {"uv": [1, 14, 7, 16], "texture": "#3"},
+				"up": {"uv": [9, 1, 15, 7], "texture": "#3"},
+				"down": {"uv": [9, 9, 15, 15], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Segment 1",
+			"from": [5, 12, 5],
+			"to": [11, 28, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 20, 13]},
+			"faces": {
+				"north": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"east": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"south": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"west": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"up": {"uv": [9, 1, 15, 7], "texture": "#3"},
+				"down": {"uv": [9, 9, 15, 15], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [1, 30, 1],
+			"to": [15, 32, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 39, 9]},
+			"faces": {
+				"north": {"uv": [1, 13, 15, 15], "texture": "#1"},
+				"east": {"uv": [1, 13, 15, 15], "texture": "#1"},
+				"south": {"uv": [1, 13, 15, 15], "texture": "#1"},
+				"west": {"uv": [1, 13, 15, 15], "texture": "#1"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#1"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Base",
+			"origin": [11, 16, 11],
+			"children": [0, 1]
+		},
+		{
+			"name": "Coil",
+			"origin": [13, 20, 13],
+			"children": [2, 3]
+		}, 4]
+}

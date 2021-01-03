@@ -1,0 +1,6 @@
+{
+	"variants" :
+	{
+		"" : { "model" : "vamprism:block/prismatic_cube_iron_corners" }
+	}
+}

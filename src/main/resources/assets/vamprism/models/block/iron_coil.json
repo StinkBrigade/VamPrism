@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"3": "vamprism:block/tesla_coil",
+		"particle": "vamprism:block/sunlight_pool_base_side_connecter"
+	},
+	"elements": [
+		{
+			"name": "Coil",
+			"from": [5, 0, 5],
+			"to": [11, 16, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 8, 13]},
+			"faces": {
+				"north": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"east": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"south": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"west": {"uv": [1, 0, 7, 16], "texture": "#3"},
+				"up": {"uv": [9, 1, 15, 7], "texture": "#3"},
+				"down": {"uv": [9, 9, 15, 15], "texture": "#3"}
+			}
+		}
+	]
+}

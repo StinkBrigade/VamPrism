@@ -1,0 +1,20 @@
+{
+  "variants":
+  {
+    "axis=x":
+    {
+      "model": "vamprism:block/iron_coil",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y":
+    {
+      "model": "vamprism:block/iron_coil"
+    },
+    "axis=z":
+    {
+      "model": "vamprism:block/iron_coil",
+      "x": 90
+    }
+  }
+}

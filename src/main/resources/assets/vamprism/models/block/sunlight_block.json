@@ -1,0 +1,8 @@
+{
+	"parent" : "block/cube_column",
+	"textures" :
+	{
+		"end" : "vamprism:block/light_top",
+		"side" : "vamprism:block/light_side"
+	}
+}
