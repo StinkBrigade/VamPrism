@@ -1,5 +1,6 @@
 package kimera.really.works.vamprism.common.tileentity;
 
+import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.client.renderer.tileentitty.SunlightPoolTileEntityRenderer;
 import kimera.really.works.vamprism.common.blocks.SunlightPoolBlock;
 import kimera.really.works.vamprism.common.util.PrismaStorage;
@@ -15,8 +16,10 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraftforge.common.extensions.IForgeTileEntity;
+import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +34,7 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
     {
         super(TileEntityRegistry.SUNLIGHT_POOL.get(), 3, 1000.0F);
 
-        this.prismaIncrement = 1.0F;
+        this.prismaIncrement = 2.5F;
     }
 
     @Override
@@ -96,8 +99,9 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
 
     public void collectPrisma()
     {
+        long timeFromMidday = this.world.getDayTime() - 6000L;
         int currentLightLevel = this.getLightLevel();
-        float lightProportion = ((float) currentLightLevel) / 15F;
+        float lightProportion = 1.0F - MathHelper.clamp(MathHelper.abs(timeFromMidday) / 6000F, 0.0F, 1.0F);
 
         this.getInternalStorage().incrementAllCurrentValues(lightProportion * this.getPrismaIncrement());
     }
