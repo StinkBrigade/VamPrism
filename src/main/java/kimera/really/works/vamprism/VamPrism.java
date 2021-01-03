@@ -23,5 +23,6 @@ public class VamPrism
 
         ItemRegistry.ITEMS.register(EVENT_BUS);
         BlockRegistry.BLOCKS.register(EVENT_BUS);
+        TileEntityRegistry.TILE_ENTITIES.register(EVENT_BUS);
     }
 }
