@@ -137,7 +137,7 @@ public class PrismaticTeslaTileEntityRenderer extends TileEntityRenderer<Prismat
 
         drawVertex(vertexBuilder, matrix4f, matrix3f, x2, y1, z3, xUV2, yUV1, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
         drawVertex(vertexBuilder, matrix4f, matrix3f, x2, y2, z2, xUV2, yUV2, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
-        drawVertex(vertexBuilder, matrix4f, matrix3f, x1, y2, z4, xUV1, yUV1, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
+        drawVertex(vertexBuilder, matrix4f, matrix3f, x1, y2, z4, xUV1, yUV2, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
         drawVertex(vertexBuilder, matrix4f, matrix3f, x1, y1, z1, xUV1, yUV1, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
     }
 

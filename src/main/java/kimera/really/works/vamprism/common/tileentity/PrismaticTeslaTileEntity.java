@@ -38,7 +38,7 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStoreTileEntity impl
         {
             return IForgeTileEntity.INFINITE_EXTENT_AABB;
         }
-        return super.getRenderBoundingBox();
+        return new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(1, 3, 1));
     }
 
     @Override

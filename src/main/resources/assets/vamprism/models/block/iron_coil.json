@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
 	"textures": {
 		"3": "vamprism:block/tesla_coil",
 		"particle": "vamprism:block/sunlight_pool_base_side_connecter"

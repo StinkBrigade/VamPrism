@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
 	"textures": {
 		"0": "vamprism:block/sunlight_pool_base_side_connecter",
 		"1": "vamprism:block/sunlight_pool_base_bottom",
