@@ -22,8 +22,8 @@ public class BlockRegistry
 
     // Fake Blocks for renderers, multiblocks, etc
     public static final RegistryObject<Block> SUNLIGHT_BLOCK = BLOCKS.register("sunlight_block", () -> new Block(AbstractBlock.Properties.create(Material.GLASS)));
-    public static final RegistryObject<Block> PRISMATIC_CUBE = BLOCKS.register("prismatic_cube", () -> new Block(AbstractBlock.Properties.create(Material.GLASS).notSolid()));
-    public static final RegistryObject<Block> PRISMATIC_CUBE_IRON_CORNERS = BLOCKS.register("prismatic_cube_iron_corners", () -> new Block(AbstractBlock.Properties.create(Material.GLASS).notSolid()));
+    public static final RegistryObject<Block> PRISMATIC_CUBE = BLOCKS.register("prismatic_cube", () -> new Block(AbstractBlock.Properties.create(Material.GLASS).notSolid().setOpaque(BlockRegistry::isntSolid)));
+    public static final RegistryObject<Block> PRISMATIC_CUBE_IRON_CORNERS = BLOCKS.register("prismatic_cube_iron_corners", () -> new Block(AbstractBlock.Properties.create(Material.GLASS).notSolid().setOpaque(BlockRegistry::isntSolid)));
 
     private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos)
     {
