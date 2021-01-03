@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.tileentity.SunlightPoolTileEntity;
+import kimera.really.works.vamprism.common.util.ClientUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -32,16 +33,7 @@ public class SunlightPoolTileEntityRenderer extends TileEntityRenderer<SunlightP
 
     private static final int BEAM_TEXTURE_FRAMES = 64;
 
-    private static final int BEAM_TEXTURE_WIDTH = 8;
-    private static final int BEAM_TEXTURE_HEIGHT = 1024;
-
-    private static final int BEAM_FRAME_WIDTH = 8;
-    private static final int BEAM_FRAME_HEIGHT = 16;
-
     private static final int BEAM_SEGMENTS = 16;
-
-    private static final float BEAM_WIDTH_PROPORTION = ((float) BEAM_FRAME_WIDTH) / ((float) BEAM_TEXTURE_WIDTH);
-    private static final float BEAM_HEIGHT_PROPORTION = ((float) BEAM_FRAME_HEIGHT) / ((float) BEAM_TEXTURE_HEIGHT);
 
     public SunlightPoolTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
     {
@@ -51,7 +43,7 @@ public class SunlightPoolTileEntityRenderer extends TileEntityRenderer<SunlightP
     @Override
     public void render(SunlightPoolTileEntity tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
-        if(tileEntity.isEnabled())
+        if(tileEntity.getAlphaValue() > 0)
         {
             renderBeams(tileEntity, partialTicks, matrixStack, bufferIn, combinedLightIn, combinedOverlayIn);
         }
@@ -60,58 +52,25 @@ public class SunlightPoolTileEntityRenderer extends TileEntityRenderer<SunlightP
 
     private void renderBeams(SunlightPoolTileEntity tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
-        BlockPos pos = tileEntity.getPos();
-
-        float sourceX = (float) pos.getX() + 0.5F;
-        float sourceY = (float) pos.getY() + 0.5F;
-        float sourceZ = (float) pos.getZ() + 0.5F;
-
-        float distanceX = 0.0F;
-        float distanceY = 1.0F;
-        float distanceZ = 0.0F;
-
         float rotation = tileEntity.getTicksExisted() + partialTicks;
 
-        IVertexBuilder beamVertexBuilder = bufferIn.getBuffer(BEAM_RENDER_TYPE);
-        this.renderBeam(tileEntity, partialTicks, matrixStack, beamVertexBuilder, BEAM_SEGMENTS, 0.5F, 1.0F, 0.5F, (rotation / 2.0F) % 360, combinedLightIn);
-        this.renderBeam(tileEntity, partialTicks, matrixStack, beamVertexBuilder, BEAM_SEGMENTS, 0.5F, 1.0F, 0.5F, ((rotation / 2.0f) % 360) + 90F, combinedLightIn);
+        float scaleProportion = tileEntity.getAlphaProportion();
 
-        IVertexBuilder beam2VertexBuilder = bufferIn.getBuffer(BEAM2_RENDER_TYPE);
-        this.renderBeam(tileEntity, partialTicks, matrixStack, beam2VertexBuilder, BEAM_SEGMENTS, 0.5F, 1.0F, 0.5F, (rotation % 360) + 45F, combinedLightIn);
-        this.renderBeam(tileEntity, partialTicks, matrixStack, beam2VertexBuilder, BEAM_SEGMENTS, 0.5F, 1.0F, 0.5F, (rotation % 360) + 135F, combinedLightIn);
+        IVertexBuilder beamVertexBuilder = bufferIn.getBuffer(BEAM_RENDER_TYPE);
+        renderBeam(beamVertexBuilder, matrixStack, scaleProportion * 0.3F, 0.6F, scaleProportion * 0.3F, 255, 255, 255, tileEntity.getAlphaValue(), tileEntity.getTicksExisted(), rotation);
+
+        beamVertexBuilder = bufferIn.getBuffer(BEAM2_RENDER_TYPE);
+        renderBeam(beamVertexBuilder, matrixStack, scaleProportion * 0.35F, 0.6F, scaleProportion * 0.35F, 255, 255, 255, tileEntity.getAlphaValue() / 2, tileEntity.getTicksExisted(), rotation * 1.5F);
     }
 
-    private void renderBeam(SunlightPoolTileEntity tileEntity, float partialTicks, MatrixStack matrixStack, IVertexBuilder beamVertexBuilder, int beamSegments, float widthX, float widthY, float widthZ, float rotation, int combinedLightIn)
+    private void renderBeam(IVertexBuilder vertexBuilder, MatrixStack matrixStack, float width, float segmentHeight, float depth, int red, int green, int blue, int alpha, int currentFrame, float rotation)
     {
         matrixStack.push();
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(rotation));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(rotation % 360));
 
-        MatrixStack.Entry matrixStackEntry = matrixStack.getLast();
-        Matrix3f matrix3f = matrixStackEntry.getNormal();
-        Matrix4f matrix4f = matrixStackEntry.getMatrix();
-
-        float xStart = widthX / 2.0F;
-
-        for(int beamSegment = 0; beamSegment < beamSegments; beamSegment++)
-        {
-            float beamProportion = ((float)beamSegment) / ((float)beamSegments);
-
-            int alpha = 255 - (int)(255.0F * beamProportion);
-
-            int currentFrame = (tileEntity.getTicksExisted() + (beamSegments - beamSegment - 1)) % BEAM_TEXTURE_FRAMES;
-
-            float uvX0 = 0;
-            float uvX1 = 1;
-            float uvY0 = BEAM_HEIGHT_PROPORTION * currentFrame;
-            float uvY1 = BEAM_HEIGHT_PROPORTION * (currentFrame + 1);
-
-            beamVertexBuilder.pos(matrix4f, xStart, (widthY * beamSegment) + widthY, 0.0F).color(255, 255, 255, alpha).tex(uvX1, uvY0).overlay(OverlayTexture.NO_OVERLAY).lightmap(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            beamVertexBuilder.pos(matrix4f, xStart, widthY * beamSegment, 0.0F).color(255, 255, 255, alpha).tex(uvX1, uvY1).overlay(OverlayTexture.NO_OVERLAY).lightmap(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            beamVertexBuilder.pos(matrix4f, -xStart, widthY * beamSegment, 0.0F).color(255, 255, 255, alpha).tex(uvX0, uvY1).overlay(OverlayTexture.NO_OVERLAY).lightmap(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            beamVertexBuilder.pos(matrix4f, -xStart, (widthY * beamSegment) + widthY, 0.0F).color(255, 255, 255, alpha).tex(uvX0, uvY0).overlay(OverlayTexture.NO_OVERLAY).lightmap(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-        }
+        ClientUtil.drawBeam(vertexBuilder, matrixStack, 0.0F, 0.0F, 0.0F, width, depth, BEAM_SEGMENTS, segmentHeight, currentFrame, BEAM_TEXTURE_FRAMES, red, green, blue, alpha, true);
 
         matrixStack.pop();
     }

@@ -1,27 +1,14 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-import kimera.really.works.vamprism.VamPrism;
-import kimera.really.works.vamprism.client.renderer.tileentitty.SunlightPoolTileEntityRenderer;
 import kimera.really.works.vamprism.common.blocks.SunlightPoolBlock;
-import kimera.really.works.vamprism.common.util.PrismaStorage;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraftforge.common.extensions.IForgeTileEntity;
-import org.apache.logging.log4j.Level;
-
-import javax.annotation.Nullable;
 
 public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implements ITickableTileEntity
 {
@@ -29,6 +16,8 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
 
     private boolean enabled;
     private int ticksExisted;
+
+    private int alphaValue;
 
     public SunlightPoolTileEntity()
     {
@@ -45,6 +34,8 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
         this.prismaIncrement = parentNBTTagCompound.getFloat("prismaIncrement");
 
         this.enabled = parentNBTTagCompound.getBoolean("enabled");
+        this.ticksExisted = parentNBTTagCompound.getInt("ticksExisted");
+        this.alphaValue = parentNBTTagCompound.getInt("alphaValue");
     }
 
     @Override
@@ -55,6 +46,8 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
         parentNBTTagCompound.putFloat("prismaIncrement", this.prismaIncrement);
 
         parentNBTTagCompound.putBoolean("enabled", this.enabled);
+        parentNBTTagCompound.putInt("ticksExisted", this.ticksExisted);
+        parentNBTTagCompound.putInt("alphaValue", this.alphaValue);
 
         return parentNBTTagCompound;
     }
@@ -94,6 +87,23 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
         if(this.enabled)
         {
             collectPrisma();
+
+            if(alphaValue < 255)
+            {
+                alphaValue += 8;
+                if(alphaValue > 255)
+                {
+                    alphaValue = 255;
+                }
+            }
+        }
+        else if(alphaValue > 0)
+        {
+            alphaValue -= 15;
+            if(alphaValue < 0)
+            {
+                alphaValue = 0;
+            }
         }
     }
 
@@ -125,6 +135,16 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
     public int getTicksExisted()
     {
         return this.ticksExisted;
+    }
+
+    public int getAlphaValue()
+    {
+        return this.alphaValue;
+    }
+
+    public float getAlphaProportion()
+    {
+        return ((float) this.getAlphaValue()) / 255.0F;
     }
 
     public int getLightLevel()
