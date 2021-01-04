@@ -19,6 +19,7 @@ public class BlockRegistry
 
     public static final RegistryObject<Block> SUNLIGHT_POOL = BLOCKS.register("sunlight_pool", () -> new SunlightPoolBlock(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().harvestLevel(2).hardnessAndResistance(2.0F, 4.0F).notSolid().setOpaque(BlockRegistry::isntSolid)));
     public static final RegistryObject<Block> PRISMATIC_TESLA = BLOCKS.register("prismatic_tesla", () -> new PrismaticTeslaBlock(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().harvestLevel(2).hardnessAndResistance(2.0F, 4.0F).notSolid().setOpaque(BlockRegistry::isntSolid)));
+    public static final RegistryObject<Block> PRISMA_STORE = BLOCKS.register("prisma_store", () -> new PrismaStoreBlock(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().harvestLevel(2).hardnessAndResistance(2.0F, 4.0F).notSolid().setOpaque(BlockRegistry::isntSolid)));
 
     // Fake Blocks for renderers, multiblocks, etc
     public static final RegistryObject<Block> SUNLIGHT_BLOCK = BLOCKS.register("sunlight_block", () -> new Block(AbstractBlock.Properties.create(Material.GLASS)));

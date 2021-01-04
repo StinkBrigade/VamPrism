@@ -8,5 +8,6 @@
   "block.vamprism.iron_coil" : "Iron Coil",
 
   "block.vamprism.sunlight_pool" : "Sunlight Pool",
-  "block.vamprism.prismatic_tesla" : "Prismatic Tesla"
+  "block.vamprism.prismatic_tesla" : "Prismatic Tesla",
+  "block.vamprism.prisma_store" : "Prisma Store"
 }

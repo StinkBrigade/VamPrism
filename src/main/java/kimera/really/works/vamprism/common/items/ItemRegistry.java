@@ -25,4 +25,5 @@ public class ItemRegistry
 
     public static final RegistryObject<Item> SUNLIGHT_POOL = ITEMS.register("sunlight_pool", () -> new BlockItem(BlockRegistry.SUNLIGHT_POOL.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
     public static final RegistryObject<Item> PRISMATIC_TESLA = ITEMS.register("prismatic_tesla", () -> new BlockItem(BlockRegistry.PRISMATIC_TESLA.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> PRISMA_STORE = ITEMS.register("prisma_store", () -> new BlockItem(BlockRegistry.PRISMA_STORE.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
 }
