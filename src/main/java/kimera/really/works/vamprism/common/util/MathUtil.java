@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.util;
 
-public final class MathUtils
+public final class MathUtil
 {
     public static final float PI = (float) Math.PI;
 

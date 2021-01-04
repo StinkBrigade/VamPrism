@@ -1,12 +1,9 @@
 package kimera.really.works.vamprism.client.renderer.tileentitty;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.tileentity.PrismaticTeslaTileEntity;
-import kimera.really.works.vamprism.common.tileentity.SunlightPoolTileEntity;
-import kimera.really.works.vamprism.common.util.MathUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -18,15 +15,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
-
-import java.util.Vector;
 
 public class PrismaticTeslaTileEntityRenderer extends TileEntityRenderer<PrismaticTeslaTileEntity>
 {

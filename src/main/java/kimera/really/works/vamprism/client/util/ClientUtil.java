@@ -1,4 +1,4 @@
-package kimera.really.works.vamprism.common.util;
+package kimera.really.works.vamprism.client.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
