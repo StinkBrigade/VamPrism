@@ -11,11 +11,11 @@ import net.minecraft.tileentity.TileEntityType;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractPrismaStoreTileEntity extends TileEntity implements IPrismaStore
+public abstract class AbstractPrismaStorerTileEntity extends TileEntity implements IPrismaStore
 {
     protected final PrismaStorage prismaStorage;
 
-    public AbstractPrismaStoreTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue)
+    public AbstractPrismaStorerTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue)
     {
         super(tileEntityTypeIn);
 
