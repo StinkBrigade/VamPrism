@@ -109,8 +109,8 @@ public class SunlightPoolTileEntity extends AbstractPrismaStoreTileEntity implem
 
     public void collectPrisma()
     {
-        long timeFromMidday = this.world.getDayTime() - 6000L;
-        int currentLightLevel = this.getLightLevel();
+        // Modulo to prevent the Sunlight Pool from just... not working after day 1 ends
+        long timeFromMidday = (this.world.getDayTime() % 24000L) - 6000L;
         float lightProportion = 1.0F - MathHelper.clamp(MathHelper.abs(timeFromMidday) / 6000F, 0.0F, 1.0F);
 
         this.getInternalStorage().incrementAllCurrentValues(lightProportion * this.getPrismaIncrement());
