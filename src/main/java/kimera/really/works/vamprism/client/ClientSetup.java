@@ -32,6 +32,7 @@ public class ClientSetup
         {
             RenderTypeLookup.setRenderLayer(BlockRegistry.FANKRYSTAL_BLOCK.get(), RenderType.getTranslucent());
             RenderTypeLookup.setRenderLayer(BlockRegistry.SUNLIGHT_POOL.get(), RenderType.getTranslucent());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.PRISMA_STORE.get(), RenderType.getTranslucent());
 
             RenderTypeLookup.setRenderLayer(BlockRegistry.SUNLIGHT_BLOCK.get(), RenderType.getTranslucent());
             RenderTypeLookup.setRenderLayer(BlockRegistry.PRISMATIC_CUBE.get(), RenderType.getTranslucent());
