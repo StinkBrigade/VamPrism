@@ -1,3 +1,7 @@
 {
-	"parent" : "vamprism:block/prismatic_tesla_base1"
+	"parent" : "item/generated",
+	"textures" :
+	{
+		"layer0" : "vamprism:item/prismatic_tesla"
+	}
 }
