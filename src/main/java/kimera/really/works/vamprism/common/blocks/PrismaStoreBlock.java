@@ -35,6 +35,20 @@ public class PrismaStoreBlock extends Block implements INeedleInteractable
         super(properties);
     }
 
+    @Override
+    public boolean hasTileEntity(BlockState state)
+    {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    {
+        PrismaStoreTileEntity prismaStoreTileEntity = new PrismaStoreTileEntity();
+
+        return prismaStoreTileEntity;
+    }
+
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)

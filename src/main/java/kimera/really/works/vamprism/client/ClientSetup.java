@@ -1,6 +1,7 @@
 package kimera.really.works.vamprism.client;
 
 import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.client.renderer.tileentitty.PrismaStoreTileEntityRenderer;
 import kimera.really.works.vamprism.client.renderer.tileentitty.PrismaticTeslaTileEntityRenderer;
 import kimera.really.works.vamprism.client.renderer.tileentitty.SunlightPoolTileEntityRenderer;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
@@ -27,6 +28,7 @@ public class ClientSetup
 
         ClientRegistry.bindTileEntityRenderer(TileEntityRegistry.SUNLIGHT_POOL.get(), SunlightPoolTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityRegistry.PRISMATIC_TESLA.get(), PrismaticTeslaTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityRegistry.PRISMA_STORE.get(), PrismaStoreTileEntityRenderer::new);
 
         event.enqueueWork(() ->
         {
