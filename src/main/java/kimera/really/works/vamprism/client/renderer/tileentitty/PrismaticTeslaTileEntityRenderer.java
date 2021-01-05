@@ -44,7 +44,10 @@ public class PrismaticTeslaTileEntityRenderer extends TileEntityRenderer<Prismat
         float rotation = tileEntity.getTicksExisted() + partialTicks;
 
         renderTop(tileEntity, blockRendererDispatcher, rotation, matrixStack, bufferIn, combinedLightIn, combinedOverlayIn);
-        renderLight(tileEntity, blockRendererDispatcher, rotation, matrixStack, bufferIn, combinedLightIn, combinedOverlayIn);
+        if(tileEntity.getTotalFillRatio() > 0)
+        {
+            renderLight(tileEntity, blockRendererDispatcher, rotation, matrixStack, bufferIn, combinedLightIn, combinedOverlayIn);
+        }
     }
 
     private void renderTop(PrismaticTeslaTileEntity tileEntity, BlockRendererDispatcher blockRendererDispatcher, float rotation, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
@@ -85,9 +88,10 @@ public class PrismaticTeslaTileEntityRenderer extends TileEntityRenderer<Prismat
         BlockPos blockPos = tileEntity.getPos().add(0, 1, 0);
         BlockState blockState = BlockRegistry.SUNLIGHT_BLOCK.get().getDefaultState();
 
-        float xScale = 0.4F;
-        float yScale = 0.4F;
-        float zScale = 0.4F;
+        float teslaInternalBuffer = tileEntity.getTotalFillRatio();
+        float xScale = 0.4F * teslaInternalBuffer;
+        float yScale = 0.4F * teslaInternalBuffer;
+        float zScale = 0.4F * teslaInternalBuffer;
 
         matrixStack.push();
 
