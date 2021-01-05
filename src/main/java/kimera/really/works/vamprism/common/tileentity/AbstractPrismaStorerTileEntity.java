@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-import kimera.really.works.vamprism.common.util.IPrismaStore;
+import kimera.really.works.vamprism.common.util.IPrismaStorer;
 import kimera.really.works.vamprism.common.util.PrismaStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntityType;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractPrismaStorerTileEntity extends TileEntity implements IPrismaStore
+public abstract class AbstractPrismaStorerTileEntity extends TileEntity implements IPrismaStorer
 {
     protected final PrismaStorage prismaStorage;
 
@@ -121,6 +121,33 @@ public abstract class AbstractPrismaStorerTileEntity extends TileEntity implemen
     public void setMaxPrismaValue(int index, float value)
     {
         this.getInternalStorage().setMaxValue(index, value);
+    }
+
+    @Override
+    public boolean transferPrismaTo(IPrismaStorer target, int index, float amount, float loss)
+    {
+        if(!this.isEmpty() && !target.isFull())
+        {
+            float availablePrisma = this.getCurrentPrismaValue(index);
+            float availableTargetStorage = target.getMaxPrismaValue(index) - target.getCurrentPrismaValue(index);
+
+            if(amount > availablePrisma)
+            {
+                amount = availablePrisma;
+            }
+
+            float remainder = amount - availableTargetStorage;
+            if(remainder > 0)
+            {
+                amount -= remainder;
+            }
+
+            this.getInternalStorage().incrementCurrentValue(index, -amount);
+            target.getInternalStorage().incrementCurrentValue(index, amount * (1.0F - loss));
+
+            return true;
+        }
+        return false;
     }
 
     public abstract int getTileEntityId();
