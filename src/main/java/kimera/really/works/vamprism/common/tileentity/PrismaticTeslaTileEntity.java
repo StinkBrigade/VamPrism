@@ -3,7 +3,7 @@ package kimera.really.works.vamprism.common.tileentity;
 import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.blocks.PrismaticTeslaBlock;
-import net.minecraft.block.Block;
+import kimera.really.works.vamprism.common.util.IPrismaStorer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -22,14 +22,23 @@ import java.util.List;
 
 public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity implements ITickableTileEntity
 {
-    private List<BlockPos> connectedTeslas;
-    private List<BlockPos> connectedLinkers;
+    private List<BlockPos> connectedTeslaPositions;
+    private List<BlockPos> connectedLinkerPositions;
+
+    private List<PrismaticTeslaTileEntity> connectedTeslas;
+    private List<ITeslaLinker> connectedLinkers;
+
+    private float transferRate;
+    private float lossRate;
 
     private int ticksExisted;
 
     public PrismaticTeslaTileEntity()
     {
-        super(TileEntityRegistry.PRISMATIC_TESLA.get(), 3, 100.0F);
+        super(TileEntityRegistry.PRISMATIC_TESLA.get(), 3, 150.0F);
+
+        this.transferRate = 15.0F;
+        this.lossRate = 0.1F;
     }
 
     @Override
@@ -39,8 +48,11 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
 
         this.ticksExisted = parentNBTTagCompound.getInt("ticksExisted");
 
-        this.connectedTeslas = this.readBlockPosListNBT(parentNBTTagCompound, "connectedTeslas");
-        this.connectedLinkers = this.readBlockPosListNBT(parentNBTTagCompound, "connectedLinkers");
+        this.transferRate = parentNBTTagCompound.getFloat("transferRate");
+        this.lossRate = parentNBTTagCompound.getFloat("lossRate");
+
+        this.setConnectedTeslaPositions(this.readBlockPosListNBT(parentNBTTagCompound, "connectedTeslas"));
+        this.setConnectedLinkerPositions(this.readBlockPosListNBT(parentNBTTagCompound, "connectedLinkers"));
     }
 
     @Override
@@ -50,8 +62,11 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
 
         parentNBTTagCompound.putInt("ticksExisted", this.ticksExisted);
 
-        this.writeBlockPosListNBT(parentNBTTagCompound, "connectedTeslas", this.connectedTeslas);
-        this.writeBlockPosListNBT(parentNBTTagCompound, "connectedLinkers", this.connectedLinkers);
+        parentNBTTagCompound.putFloat("transferRate", this.transferRate);
+        parentNBTTagCompound.putFloat("lossRate", this.lossRate);
+
+        this.writeBlockPosListNBT(parentNBTTagCompound, "connectedTeslas", this.getConnectedTeslaPositions());
+        this.writeBlockPosListNBT(parentNBTTagCompound, "connectedLinkers", this.getConnectedLinkerPositions());
 
         return parentNBTTagCompound;
     }
@@ -60,50 +75,62 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
     public void tick()
     {
         ticksExisted++;
-    }
 
-    public int getTicksExisted()
-    {
-        return this.ticksExisted;
-    }
-
-    @Override
-    public AxisAlignedBB getRenderBoundingBox()
-    {
-        BlockState state = this.getBlockState();
-        BlockPos blockPos = this.getPos();
-        if(state.get(PrismaticTeslaBlock.ENABLED) == true)
+        if(!world.isRemote)
         {
-            return IForgeTileEntity.INFINITE_EXTENT_AABB;
+            processConnectedTeslas();
+            processConnectedLinkers();
         }
-        return new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(1, 3, 1));
+    }
+
+    private void processConnectedTeslas()
+    {
+        for(PrismaticTeslaTileEntity teslaTileEntity : this.getConnectedTeslas())
+        {
+            // How the fuck do I do Tesla logic
+        }
+    }
+
+    private void processConnectedLinkers()
+    {
+        for(ITeslaLinker linker : this.getConnectedLinkers())
+        {
+            if(linker.getLinkerState().canGiveOutput)
+            {
+                IPrismaStorer.handlePrismaTransfer(linker, this, 5.0F, 0.0F);
+            }
+            else if(linker.getLinkerState().canTakeInput)
+            {
+                IPrismaStorer.handlePrismaTransfer(this, linker, 5.0F, 0.0F);
+            }
+        }
     }
 
     public void placeTesla()
     {
-        this.setConnectedTeslas(this.findTeslasInRange(6, 6));
-        this.setConnectedLinkers(this.findAdjacentLinkers());
+        this.setConnectedTeslaPositions(this.findTeslasInRange(6, 6));
+        this.setConnectedLinkerPositions(this.findAdjacentLinkers());
 
-        for(BlockPos connectedTesla : this.connectedTeslas)
+        for(BlockPos connectedTesla : this.getConnectedTeslaPositions())
         {
             TileEntity tileEntity = world.getTileEntity(connectedTesla);
             if(tileEntity instanceof PrismaticTeslaTileEntity)
             {
                 PrismaticTeslaTileEntity teslaTileEntity = (PrismaticTeslaTileEntity) tileEntity;
-                teslaTileEntity.addConnectedTesla(this.pos);
+                teslaTileEntity.addConnectedTeslaPosition(this.pos);
             }
         }
     }
 
     public void removeTesla()
     {
-        for(BlockPos connectedTesla : this.connectedTeslas)
+        for(BlockPos connectedTesla : this.getConnectedTeslaPositions())
         {
             TileEntity tileEntity = world.getTileEntity(connectedTesla);
             if(tileEntity instanceof PrismaticTeslaTileEntity)
             {
                 PrismaticTeslaTileEntity teslaTileEntity = (PrismaticTeslaTileEntity) tileEntity;
-                teslaTileEntity.removeConnectedTesla(this.pos);
+                teslaTileEntity.removeConnectedTeslaPosition(this.pos);
             }
         }
     }
@@ -111,15 +138,15 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
     public void neighbourUpdated(BlockPos pos)
     {
         boolean hasLinker = this.testAdjacentLinker(pos);
-        boolean existingLinkerConnected = this.hasConnectedLinker(pos);
+        boolean existingLinkerConnected = this.hasConnectedLinkerAt(pos);
 
         if(hasLinker && !existingLinkerConnected)
         {
-            this.addConnectedLinker(pos);
+            this.addConnectedLinkerPosition(pos);
         }
         else if(!hasLinker && existingLinkerConnected)
         {
-            this.removeConnectedLinker(pos);
+            this.removeConnectedLinkerPosition(pos);
         }
     }
 
@@ -234,54 +261,210 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
         return 0;
     }
 
-    public List<BlockPos> getConnectedTeslas()
+    public float getTransferRate()
     {
+        return this.transferRate;
+    }
+
+    public void setTransferRate(float transferRate)
+    {
+        this.transferRate = transferRate;
+    }
+
+    public int getTicksExisted()
+    {
+        return this.ticksExisted;
+    }
+
+    public List<BlockPos> getConnectedTeslaPositions()
+    {
+        if(this.connectedTeslaPositions == null)
+        {
+            this.setConnectedTeslaPositions(new ArrayList<>());
+        }
+        return this.connectedTeslaPositions;
+    }
+
+    public List<PrismaticTeslaTileEntity> getConnectedTeslas()
+    {
+        if(this.connectedTeslas == null || this.connectedTeslas.size() != this.getConnectedTeslaPositions().size())
+        {
+            this.updateConnectedTeslas();
+        }
         return this.connectedTeslas;
     }
 
-    public boolean hasConnectedTesla(BlockPos pos)
+    public boolean hasConnectedTeslaAt(BlockPos pos)
     {
-        return this.getConnectedTeslas().contains(pos);
+        return this.getConnectedTeslaPositions().contains(pos);
     }
 
-    public List<BlockPos> getConnectedLinkers()
+    public boolean isTeslaConnected(PrismaticTeslaTileEntity teslaTileEntity)
     {
+        return this.getConnectedTeslas().contains(teslaTileEntity);
+    }
+
+    public List<BlockPos> getConnectedLinkerPositions()
+    {
+        if(this.connectedLinkerPositions == null)
+        {
+            this.setConnectedLinkerPositions(new ArrayList<>());
+        }
+        return this.connectedLinkerPositions;
+    }
+
+    public List<ITeslaLinker> getConnectedLinkers()
+    {
+        if(this.connectedLinkers == null || this.connectedLinkers.size() != this.getConnectedLinkerPositions().size())
+        {
+            this.updateConnectedLinkers();
+        }
         return this.connectedLinkers;
     }
 
-    public boolean hasConnectedLinker(BlockPos pos)
+    public boolean hasConnectedLinkerAt(BlockPos pos)
     {
-        return this.getConnectedLinkers().contains(pos);
+        return this.getConnectedLinkerPositions().contains(pos);
     }
 
-    public void setConnectedTeslas(List<BlockPos> connectedTeslas)
+    public boolean isLinkerConnected(ITeslaLinker linker)
+    {
+        return this.getConnectedLinkers().contains(linker);
+    }
+
+    public void setConnectedTeslaPositions(List<BlockPos> connectedTeslaPositions)
+    {
+        this.connectedTeslaPositions = connectedTeslaPositions;
+        this.updateConnectedTeslas();
+    }
+
+    public void setConnectedTeslas(List<PrismaticTeslaTileEntity> connectedTeslas)
     {
         this.connectedTeslas = connectedTeslas;
     }
 
-    public void setConnectedLinkers(List<BlockPos> connectedLinkers)
+    public void setConnectedLinkerPositions(List<BlockPos> connectedLinkerPositions)
+    {
+        this.connectedLinkerPositions = connectedLinkerPositions;
+        this.updateConnectedLinkers();
+    }
+
+    public void setConnectedLinkers(List<ITeslaLinker> connectedLinkers)
     {
         this.connectedLinkers = connectedLinkers;
     }
 
-    public void addConnectedTesla(BlockPos connectedTesla)
+    public void addConnectedTeslaPosition(BlockPos connectedTeslaPos)
+    {
+        this.getConnectedTeslaPositions().add(connectedTeslaPos);
+
+        TileEntity tileEntity = this.world.getTileEntity(connectedTeslaPos);
+        if(tileEntity instanceof PrismaticTeslaTileEntity)
+        {
+            this.addConnectedTesla((PrismaticTeslaTileEntity) tileEntity);
+        }
+    }
+
+    public void addConnectedTesla(PrismaticTeslaTileEntity connectedTesla)
     {
         this.getConnectedTeslas().add(connectedTesla);
     }
 
-    public void addConnectedLinker(BlockPos connectedLinker)
+    public void addConnectedLinkerPosition(BlockPos connectedLinkerPos)
     {
-        this.getConnectedLinkers().add(connectedLinker);
+        this.getConnectedLinkerPositions().add(connectedLinkerPos);
+
+        VamPrism.LOGGER.log(Level.INFO, "Add Connected Linker Position");
+
+        TileEntity tileEntity = this.world.getTileEntity(connectedLinkerPos);
+        VamPrism.LOGGER.log(Level.INFO, "Tile Entity: " + tileEntity.toString());
+        if(tileEntity instanceof ITeslaLinker)
+        {
+            this.addConnectedLinker((ITeslaLinker) tileEntity);
+        }
     }
 
-    public void removeConnectedTesla(BlockPos connectedTesla)
+    public void addConnectedLinker(ITeslaLinker linker)
+    {
+        this.getConnectedLinkers().add(linker);
+    }
+
+    public void removeConnectedTeslaPosition(BlockPos connectedTeslaPos)
+    {
+        int teslaIndex = this.getConnectedTeslaPositions().indexOf(connectedTeslaPos);
+        this.getConnectedTeslaPositions().remove(connectedTeslaPos);
+        this.removeConnectedTesla(teslaIndex);
+    }
+
+    public void removeConnectedTesla(PrismaticTeslaTileEntity connectedTesla)
     {
         this.getConnectedTeslas().remove(connectedTesla);
     }
 
-    public void removeConnectedLinker(BlockPos connectedLinker)
+    public void removeConnectedTesla(int index)
+    {
+        if(this.getConnectedTeslas().size() > index)
+        {
+            this.getConnectedTeslas().remove(index);
+        }
+    }
+
+    public void removeConnectedLinkerPosition(BlockPos connectedLinkerPos)
+    {
+        int linkerIndex = this.getConnectedLinkerPositions().indexOf(connectedLinkerPos);
+        this.getConnectedLinkerPositions().remove(connectedLinkerPos);
+        this.removeConnectedLinker(linkerIndex);
+    }
+
+    public void removeConnectedLinker(ITeslaLinker connectedLinker)
     {
         this.getConnectedLinkers().remove(connectedLinker);
+    }
+
+    public void removeConnectedLinker(int index)
+    {
+        if(this.getConnectedLinkers().size() > index)
+        {
+            this.getConnectedLinkers().remove(index);
+        }
+    }
+
+    public void updateConnectedTeslas()
+    {
+        List<PrismaticTeslaTileEntity> connectedTeslas = new ArrayList<>();
+
+        for(BlockPos connectedTeslaPos : this.getConnectedTeslaPositions())
+        {
+            if(this.hasWorld())
+            {
+                TileEntity tileEntity = this.world.getTileEntity(connectedTeslaPos);
+                if(tileEntity instanceof PrismaticTeslaTileEntity)
+                {
+                    connectedTeslas.add((PrismaticTeslaTileEntity) tileEntity);
+                }
+            }
+        }
+
+        this.setConnectedTeslas(connectedTeslas);
+    }
+
+    public void updateConnectedLinkers()
+    {
+        List<ITeslaLinker> connectedLinkers = new ArrayList<>();
+
+        for(BlockPos connectedLinkerPos : this.getConnectedLinkerPositions())
+        {
+            if(this.hasWorld())
+            {
+                TileEntity tileEntity = this.world.getTileEntity(connectedLinkerPos);
+                if(tileEntity instanceof ITeslaLinker)
+                {
+                    connectedLinkers.add((ITeslaLinker) tileEntity);
+                }
+            }
+        }
+
+        this.setConnectedLinkers(connectedLinkers);
     }
 
     private List<BlockPos> readBlockPosListNBT(CompoundNBT parentNBTTagCompound, String key)
@@ -314,6 +497,18 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
             listNBT.add(NBTUtil.writeBlockPos(list.get(i)));
         }
         parentNBTTagCompound.put(key, listNBT);
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        BlockState state = this.getBlockState();
+        BlockPos blockPos = this.getPos();
+        if(state.get(PrismaticTeslaBlock.ENABLED) == true)
+        {
+            return IForgeTileEntity.INFINITE_EXTENT_AABB;
+        }
+        return new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(1, 3, 1));
     }
 
     @Override
