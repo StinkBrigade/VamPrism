@@ -75,12 +75,12 @@ public class SunlightPoolBlock extends BreakableBlock implements INeedleInteract
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
         ItemStack mainhandItem = player.getHeldItemMainhand();
-        if(!worldIn.isRemote && mainhandItem.getItem() == ItemRegistry.FANKRYSTAL_NEEDLE.get() && handIn == Hand.MAIN_HAND)
+        if(!world.isRemote && mainhandItem.getItem() == ItemRegistry.FANKRYSTAL_NEEDLE.get() && handIn == Hand.MAIN_HAND)
         {
-            onNeedleInteract(pos, mainhandItem, worldIn,player);
+            onNeedleInteract(pos, mainhandItem, world,player);
             return ActionResultType.CONSUME;
         }
         return ActionResultType.PASS;

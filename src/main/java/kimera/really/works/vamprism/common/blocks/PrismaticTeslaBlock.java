@@ -1,9 +1,8 @@
 package kimera.really.works.vamprism.common.blocks;
 
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.items.ItemRegistry;
 import kimera.really.works.vamprism.common.tileentity.PrismaticTeslaTileEntity;
-import kimera.really.works.vamprism.common.tileentity.SunlightPoolTileEntity;
-import kimera.really.works.vamprism.common.util.PrismaStorage;
+import kimera.really.works.vamprism.common.util.INeedleInteractable;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,20 +19,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.Explosion;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class PrismaticTeslaBlock extends Block
+public class PrismaticTeslaBlock extends Block implements INeedleInteractable
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 32.0D, 16.0D);
 
@@ -63,27 +60,56 @@ public class PrismaticTeslaBlock extends Block
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        if(!world.isRemote && handIn == Hand.MAIN_HAND)
+        ItemStack mainhandItem = player.getHeldItemMainhand();
+        if(!world.isRemote && mainhandItem.getItem() == ItemRegistry.FANKRYSTAL_NEEDLE.get() && handIn == Hand.MAIN_HAND)
         {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if(tileEntity instanceof PrismaticTeslaTileEntity)
-            {
-                PrismaticTeslaTileEntity teslaTileEntity = (PrismaticTeslaTileEntity) tileEntity;
-
-                VamPrism.LOGGER.log(Level.INFO, "Connected Teslas: " + teslaTileEntity.getConnectedTeslas().size());
-                for(int i = 0; i < teslaTileEntity.getConnectedTeslas().size(); i++)
-                {
-                    VamPrism.LOGGER.log(Level.INFO, i + ": " + teslaTileEntity.getConnectedTeslas().get(i).toString());
-                }
-
-                VamPrism.LOGGER.log(Level.INFO, "Connected Linkers: " + teslaTileEntity.getConnectedLinkers().size());
-                for(int i = 0; i < teslaTileEntity.getConnectedLinkers().size(); i++)
-                {
-                    VamPrism.LOGGER.log(Level.INFO, i + ": " + teslaTileEntity.getConnectedLinkers().get(i).toString());
-                }
-            }
+            onNeedleInteract(pos, mainhandItem, world,player);
+            return ActionResultType.CONSUME;
         }
         return super.onBlockActivated(state, world, pos, player, handIn, hit);
+    }
+
+    @Override
+    public void onNeedleInteract(BlockPos pos, ItemStack needle, World world, PlayerEntity player)
+    {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if(tileEntity instanceof PrismaticTeslaTileEntity)
+        {
+            PrismaticTeslaTileEntity teslaTileEntity = (PrismaticTeslaTileEntity) tileEntity;
+
+            String message = "Prisma R: " + teslaTileEntity.getCurrentPrismaValue(0);
+            message += ", G: " + teslaTileEntity.getCurrentPrismaValue(1);
+            message += ", B: " + teslaTileEntity.getCurrentPrismaValue(2);
+
+            player.sendMessage(new StringTextComponent(message), Util.DUMMY_UUID);
+            message = "Connected Tesla Positions: " + teslaTileEntity.getConnectedTeslaPositions().size();
+            for(int i = 0; i < teslaTileEntity.getConnectedTeslaPositions().size(); i++)
+            {
+                message += " " + i + ": " + teslaTileEntity.getConnectedTeslaPositions().get(i).toString();
+            }
+            player.sendMessage(new StringTextComponent(message), Util.DUMMY_UUID);
+
+            message = "Connected Teslas: " + teslaTileEntity.getConnectedTeslas().size();
+            for(int i = 0; i < teslaTileEntity.getConnectedTeslas().size(); i++)
+            {
+                message += " " + i + ": " + teslaTileEntity.getConnectedTeslas().get(i).toString();
+            }
+            player.sendMessage(new StringTextComponent(message), Util.DUMMY_UUID);
+
+            message = "Connected Linker Positions: " + teslaTileEntity.getConnectedLinkerPositions().size();
+            for(int i = 0; i < teslaTileEntity.getConnectedLinkerPositions().size(); i++)
+            {
+                message += " " + i + ": " + teslaTileEntity.getConnectedLinkerPositions().get(i).toString();
+            }
+            player.sendMessage(new StringTextComponent(message), Util.DUMMY_UUID);
+
+            message = "Connected Linkers: " + teslaTileEntity.getConnectedLinkers().size();
+            for(int i = 0; i < teslaTileEntity.getConnectedLinkers().size(); i++)
+            {
+                message += " " + i + ": " + teslaTileEntity.getConnectedLinkers().get(i).toString();
+            }
+            player.sendMessage(new StringTextComponent(message), Util.DUMMY_UUID);
+        }
     }
 
     @Override
@@ -117,7 +143,7 @@ public class PrismaticTeslaBlock extends Block
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor)
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos neighbor, boolean isMoving)
     {
         if(!world.isRemote())
         {
@@ -128,6 +154,7 @@ public class PrismaticTeslaBlock extends Block
                 teslaTileEntity.neighbourUpdated(neighbor);
             }
         }
+        super.neighborChanged(state, world, pos, blockIn, neighbor, isMoving);
     }
 
     @Override
