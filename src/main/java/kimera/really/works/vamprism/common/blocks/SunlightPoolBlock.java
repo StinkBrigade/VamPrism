@@ -32,7 +32,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class SunlightPoolBlock extends BreakableBlock implements INeedleInteractable
+public class SunlightPoolBlock extends AbstractPrismaLinkerBlock
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 24.0D, 16.0D);
 

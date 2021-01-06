@@ -9,7 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraftforge.common.extensions.IForgeTileEntity;
 
-public class SunlightPoolTileEntity extends AbstractTeslaLinkerTileEntity
+public class SunlightPoolTileEntity extends AbstractPrismaLinkerTileEntity
 {
     private float prismaIncrement;
 

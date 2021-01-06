@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
 
-public class PrismaStoreBlock extends AbstractNeedleInteractableBlock
+public class PrismaStoreBlock extends AbstractPrismaLinkerBlock
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 24.0D, 16.0D);
 

@@ -3,6 +3,7 @@ package kimera.really.works.vamprism.common.tileentity;
 import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.blocks.PrismaticTeslaBlock;
+import kimera.really.works.vamprism.common.util.CommonUtil;
 import kimera.really.works.vamprism.common.util.IPrismaStorer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,13 +20,12 @@ import org.apache.logging.log4j.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
+public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity implements IPrismaLinker
 {
-    private List<BlockPos> connectedTeslaPositions;
-    private List<BlockPos> connectedLinkerPositions;
+    private TeslaLinkerState linkerState;
 
+    private List<BlockPos> connectedTeslaPositions;
     private List<PrismaticTeslaTileEntity> connectedTeslas;
-    private List<ITeslaLinker> connectedLinkers;
 
     private float transferRate;
     private float lossRate;
@@ -38,6 +38,8 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
 
         this.transferRate = 15.0F;
         this.lossRate = 0.1F;
+
+        this.linkerState = TeslaLinkerState.CHANNELING;
     }
 
     @Override
@@ -50,8 +52,7 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         this.transferRate = parentNBTTagCompound.getFloat("transferRate");
         this.lossRate = parentNBTTagCompound.getFloat("lossRate");
 
-        this.setConnectedTeslaPositions(this.readBlockPosListNBT(parentNBTTagCompound, "connectedTeslas"));
-        this.setConnectedLinkerPositions(this.readBlockPosListNBT(parentNBTTagCompound, "connectedLinkers"));
+        this.setConnectedTeslaPositions(CommonUtil.readBlockPosListNBT(parentNBTTagCompound, "connectedTeslas"));
     }
 
     @Override
@@ -64,8 +65,7 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         parentNBTTagCompound.putFloat("transferRate", this.transferRate);
         parentNBTTagCompound.putFloat("lossRate", this.lossRate);
 
-        this.writeBlockPosListNBT(parentNBTTagCompound, "connectedTeslas", this.getConnectedTeslaPositions());
-        this.writeBlockPosListNBT(parentNBTTagCompound, "connectedLinkers", this.getConnectedLinkerPositions());
+        CommonUtil.writeBlockPosListNBT(parentNBTTagCompound, "connectedTeslas", this.getConnectedTeslaPositions());
 
         return parentNBTTagCompound;
     }
@@ -77,8 +77,7 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
 
         if(!world.isRemote)
         {
-            processConnectedTeslas();
-            processConnectedLinkers();
+            this.processConnectedTeslas();
         }
 
         super.tick();
@@ -92,25 +91,10 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         }
     }
 
-    private void processConnectedLinkers()
-    {
-        for(ITeslaLinker linker : this.getConnectedLinkers())
-        {
-            if(linker.getLinkerState().canGiveOutput)
-            {
-                IPrismaStorer.handlePrismaTransfer(linker, this, 5.0F, 0.0F);
-            }
-            else if(linker.getLinkerState().canTakeInput)
-            {
-                IPrismaStorer.handlePrismaTransfer(this, linker, 5.0F, 0.0F);
-            }
-        }
-    }
-
-    public void placeTesla()
+    @Override
+    public void onPlace()
     {
         this.setConnectedTeslaPositions(this.findTeslasInRange(6, 6));
-        this.setConnectedLinkerPositions(this.findAdjacentLinkers());
 
         for(BlockPos connectedTesla : this.getConnectedTeslaPositions())
         {
@@ -123,7 +107,8 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         }
     }
 
-    public void removeTesla()
+    @Override
+    public void onRemove()
     {
         for(BlockPos connectedTesla : this.getConnectedTeslaPositions())
         {
@@ -136,49 +121,10 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         }
     }
 
-    public void neighbourUpdated(BlockPos pos)
+    @Override
+    public void onNeighbourUpdated(BlockPos neighbourPos)
     {
-        boolean hasLinker = this.testAdjacentLinker(pos);
-        boolean existingLinkerConnected = this.hasConnectedLinkerAt(pos);
 
-        if(hasLinker && !existingLinkerConnected)
-        {
-            this.addConnectedLinkerPosition(pos);
-        }
-        else if(!hasLinker && existingLinkerConnected)
-        {
-            this.removeConnectedLinkerPosition(pos);
-        }
-    }
-
-    private List<BlockPos> findAdjacentLinkers()
-    {
-        List<BlockPos> linkerPositions = new ArrayList<>();
-
-        for(int i = 0; i < 4; i++)
-        {
-            int x = 1 - MathHelper.abs(i - 1);
-            int z = MathHelper.abs(2 - i) -  1;
-
-            BlockPos targetPos = new BlockPos(this.pos.getX() + x, this.pos.getY(), this.pos.getZ() + z);
-            if(testAdjacentLinker(targetPos))
-            {
-                linkerPositions.add(targetPos);
-            }
-        }
-
-        return linkerPositions;
-    }
-
-    private boolean testAdjacentLinker(BlockPos targetPos)
-    {
-        TileEntity targetTileEntity = this.world.getTileEntity(targetPos);
-        if(targetTileEntity != null && targetTileEntity instanceof ITeslaLinker)
-        {
-            return true;
-        }
-
-        return false;
     }
 
     private List<BlockPos> findTeslasInRange(int xRange, int zRange)
@@ -262,16 +208,6 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         return 0;
     }
 
-    public float getTransferRate()
-    {
-        return this.transferRate;
-    }
-
-    public void setTransferRate(float transferRate)
-    {
-        this.transferRate = transferRate;
-    }
-
     public int getTicksExisted()
     {
         return this.ticksExisted;
@@ -305,34 +241,6 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         return this.getConnectedTeslas().contains(teslaTileEntity);
     }
 
-    public List<BlockPos> getConnectedLinkerPositions()
-    {
-        if(this.connectedLinkerPositions == null)
-        {
-            this.setConnectedLinkerPositions(new ArrayList<>());
-        }
-        return this.connectedLinkerPositions;
-    }
-
-    public List<ITeslaLinker> getConnectedLinkers()
-    {
-        if(this.connectedLinkers == null || this.connectedLinkers.size() != this.getConnectedLinkerPositions().size())
-        {
-            this.updateConnectedLinkers();
-        }
-        return this.connectedLinkers;
-    }
-
-    public boolean hasConnectedLinkerAt(BlockPos pos)
-    {
-        return this.getConnectedLinkerPositions().contains(pos);
-    }
-
-    public boolean isLinkerConnected(ITeslaLinker linker)
-    {
-        return this.getConnectedLinkers().contains(linker);
-    }
-
     public void setConnectedTeslaPositions(List<BlockPos> connectedTeslaPositions)
     {
         this.connectedTeslaPositions = connectedTeslaPositions;
@@ -342,17 +250,6 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
     public void setConnectedTeslas(List<PrismaticTeslaTileEntity> connectedTeslas)
     {
         this.connectedTeslas = connectedTeslas;
-    }
-
-    public void setConnectedLinkerPositions(List<BlockPos> connectedLinkerPositions)
-    {
-        this.connectedLinkerPositions = connectedLinkerPositions;
-        this.updateConnectedLinkers();
-    }
-
-    public void setConnectedLinkers(List<ITeslaLinker> connectedLinkers)
-    {
-        this.connectedLinkers = connectedLinkers;
     }
 
     public void addConnectedTeslaPosition(BlockPos connectedTeslaPos)
@@ -369,25 +266,6 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
     public void addConnectedTesla(PrismaticTeslaTileEntity connectedTesla)
     {
         this.getConnectedTeslas().add(connectedTesla);
-    }
-
-    public void addConnectedLinkerPosition(BlockPos connectedLinkerPos)
-    {
-        this.getConnectedLinkerPositions().add(connectedLinkerPos);
-
-        VamPrism.LOGGER.log(Level.INFO, "Add Connected Linker Position");
-
-        TileEntity tileEntity = this.world.getTileEntity(connectedLinkerPos);
-        VamPrism.LOGGER.log(Level.INFO, "Tile Entity: " + tileEntity.toString());
-        if(tileEntity instanceof ITeslaLinker)
-        {
-            this.addConnectedLinker((ITeslaLinker) tileEntity);
-        }
-    }
-
-    public void addConnectedLinker(ITeslaLinker linker)
-    {
-        this.getConnectedLinkers().add(linker);
     }
 
     public void removeConnectedTeslaPosition(BlockPos connectedTeslaPos)
@@ -410,26 +288,6 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         }
     }
 
-    public void removeConnectedLinkerPosition(BlockPos connectedLinkerPos)
-    {
-        int linkerIndex = this.getConnectedLinkerPositions().indexOf(connectedLinkerPos);
-        this.getConnectedLinkerPositions().remove(connectedLinkerPos);
-        this.removeConnectedLinker(linkerIndex);
-    }
-
-    public void removeConnectedLinker(ITeslaLinker connectedLinker)
-    {
-        this.getConnectedLinkers().remove(connectedLinker);
-    }
-
-    public void removeConnectedLinker(int index)
-    {
-        if(this.getConnectedLinkers().size() > index)
-        {
-            this.getConnectedLinkers().remove(index);
-        }
-    }
-
     public void updateConnectedTeslas()
     {
         List<PrismaticTeslaTileEntity> connectedTeslas = new ArrayList<>();
@@ -449,57 +307,6 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
         this.setConnectedTeslas(connectedTeslas);
     }
 
-    public void updateConnectedLinkers()
-    {
-        List<ITeslaLinker> connectedLinkers = new ArrayList<>();
-
-        for(BlockPos connectedLinkerPos : this.getConnectedLinkerPositions())
-        {
-            if(this.hasWorld())
-            {
-                TileEntity tileEntity = this.world.getTileEntity(connectedLinkerPos);
-                if(tileEntity instanceof ITeslaLinker)
-                {
-                    connectedLinkers.add((ITeslaLinker) tileEntity);
-                }
-            }
-        }
-
-        this.setConnectedLinkers(connectedLinkers);
-    }
-
-    private List<BlockPos> readBlockPosListNBT(CompoundNBT parentNBTTagCompound, String key)
-    {
-        List<BlockPos> returnList = new ArrayList<>();
-
-        INBT returnListINBT = parentNBTTagCompound.get(key);
-        if(returnListINBT instanceof ListNBT)
-        {
-            ListNBT returnListNBT = (ListNBT) returnListINBT;
-
-            for(int i = 0; i < returnListNBT.size(); i++)
-            {
-                INBT listEntryINBT = returnListNBT.get(i);
-                if(listEntryINBT instanceof CompoundNBT)
-                {
-                    returnList.add(NBTUtil.readBlockPos((CompoundNBT) listEntryINBT));
-                }
-            }
-        }
-
-        return returnList;
-    }
-
-    private void writeBlockPosListNBT(CompoundNBT parentNBTTagCompound, String key, List<BlockPos> list)
-    {
-        ListNBT listNBT = new ListNBT();
-        for(int i = 0; i < list.size(); i++)
-        {
-            listNBT.add(NBTUtil.writeBlockPos(list.get(i)));
-        }
-        parentNBTTagCompound.put(key, listNBT);
-    }
-
     @Override
     public AxisAlignedBB getRenderBoundingBox()
     {
@@ -510,6 +317,30 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
             return IForgeTileEntity.INFINITE_EXTENT_AABB;
         }
         return new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(1, 3, 1));
+    }
+
+    @Override
+    public float getTransferRate()
+    {
+        return this.transferRate;
+    }
+
+    @Override
+    public void setTransferRate(float transferRate)
+    {
+        this.transferRate = transferRate;
+    }
+
+    @Override
+    public TeslaLinkerState getLinkerState()
+    {
+        return this.linkerState;
+    }
+
+    @Override
+    public void setLinkerState(TeslaLinkerState state)
+    {
+        this.linkerState = state;
     }
 
     @Override

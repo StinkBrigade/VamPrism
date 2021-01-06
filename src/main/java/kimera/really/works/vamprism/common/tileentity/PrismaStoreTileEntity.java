@@ -1,13 +1,9 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-import kimera.really.works.vamprism.common.blocks.PrismaticTeslaBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.extensions.IForgeTileEntity;
 
-public class PrismaStoreTileEntity extends AbstractTeslaLinkerTileEntity
+public class PrismaStoreTileEntity extends AbstractPrismaLinkerTileEntity
 {
     public PrismaStoreTileEntity()
     {
