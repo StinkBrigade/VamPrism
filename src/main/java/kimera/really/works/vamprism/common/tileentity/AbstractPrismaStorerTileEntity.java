@@ -2,8 +2,8 @@ package kimera.really.works.vamprism.common.tileentity;
 
 import kimera.really.works.vamprism.common.network.PacketHandler;
 import kimera.really.works.vamprism.common.network.PacketPrismaBufferUpdate;
-import kimera.really.works.vamprism.common.util.IPrismaStorer;
-import kimera.really.works.vamprism.common.util.PrismaStorage;
+import kimera.really.works.vamprism.common.prisma.IPrismaStorer;
+import kimera.really.works.vamprism.common.prisma.PrismaStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;

@@ -2,7 +2,7 @@ package kimera.really.works.vamprism.common.tileentity;
 
 import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.common.util.CommonUtil;
-import kimera.really.works.vamprism.common.util.IPrismaStorer;
+import kimera.really.works.vamprism.common.prisma.IPrismaStorer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;

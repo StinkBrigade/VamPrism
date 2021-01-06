@@ -2,7 +2,6 @@ package kimera.really.works.vamprism.common.blocks;
 
 import kimera.really.works.vamprism.common.items.ItemRegistry;
 import kimera.really.works.vamprism.common.util.INeedleInteractable;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BreakableBlock;
 import net.minecraft.entity.player.PlayerEntity;

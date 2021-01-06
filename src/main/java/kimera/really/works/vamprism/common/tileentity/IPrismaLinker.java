@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-import kimera.really.works.vamprism.common.util.IPrismaStorer;
+import kimera.really.works.vamprism.common.prisma.IPrismaStorer;
 import net.minecraft.util.math.BlockPos;
 
 public interface IPrismaLinker extends IPrismaStorer

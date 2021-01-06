@@ -1,4 +1,4 @@
-package kimera.really.works.vamprism.common.util;
+package kimera.really.works.vamprism.common.prisma;
 
 public interface IPrismaStorer
 {

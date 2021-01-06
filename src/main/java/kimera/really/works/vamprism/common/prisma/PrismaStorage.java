@@ -1,4 +1,4 @@
-package kimera.really.works.vamprism.common.util;
+package kimera.really.works.vamprism.common.prisma;
 
 import com.mojang.datafixers.optics.Prism;
 import net.minecraft.nbt.CompoundNBT;

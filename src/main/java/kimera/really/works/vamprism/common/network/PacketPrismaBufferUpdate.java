@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.network;
 
-import kimera.really.works.vamprism.common.util.IPrismaStorer;
+import kimera.really.works.vamprism.common.prisma.IPrismaStorer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;

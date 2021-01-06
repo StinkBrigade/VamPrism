@@ -1,21 +1,14 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-import kimera.really.works.vamprism.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.blocks.PrismaticTeslaBlock;
 import kimera.really.works.vamprism.common.util.CommonUtil;
-import kimera.really.works.vamprism.common.util.IPrismaStorer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.extensions.IForgeTileEntity;
-import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
