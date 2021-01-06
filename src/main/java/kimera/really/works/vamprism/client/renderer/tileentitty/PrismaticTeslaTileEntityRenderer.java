@@ -1,7 +1,7 @@
 package kimera.really.works.vamprism.client.renderer.tileentitty;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.tileentity.PrismaticTeslaTileEntity;
 import net.minecraft.block.BlockState;

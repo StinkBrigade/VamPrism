@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;

@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.blocks;
 
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.VamPrism;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;

@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.items;
 
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.VamPrism;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;

@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.network;
 
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.VamPrism;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;

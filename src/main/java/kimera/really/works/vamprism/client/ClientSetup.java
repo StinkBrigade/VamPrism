@@ -1,18 +1,14 @@
 package kimera.really.works.vamprism.client;
 
-import kimera.really.works.vamprism.VamPrism;
+import kimera.really.works.vamprism.common.VamPrism;
 import kimera.really.works.vamprism.client.renderer.tileentitty.PrismaStoreTileEntityRenderer;
 import kimera.really.works.vamprism.client.renderer.tileentitty.PrismaticTeslaTileEntityRenderer;
 import kimera.really.works.vamprism.client.renderer.tileentitty.SunlightPoolTileEntityRenderer;
 import kimera.really.works.vamprism.common.blocks.BlockRegistry;
 import kimera.really.works.vamprism.common.tileentity.TileEntityRegistry;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
