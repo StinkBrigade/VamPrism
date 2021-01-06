@@ -20,6 +20,12 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public final class ClientUtil
 {
+    public static final void drawBeam(IVertexBuilder vertexBuilder, MatrixStack matrixStack, float x, float y, float z, float width, float height, float depth, float segmentHeight, int currentFrame, int totalFrames, int red, int blue, int green, int alpha, boolean fade)
+    {
+        int segments = MathHelper.ceil(height / segmentHeight);
+        drawBeam(vertexBuilder, matrixStack, x, y, z, width, depth, segments, segmentHeight, currentFrame, totalFrames, red, blue, green, alpha, fade);
+    }
+
     public static final void drawBeam(IVertexBuilder vertexBuilder, MatrixStack matrixStack, float x, float y, float z, float width, float depth, int segments, float segmentHeight, int currentFrame, int totalFrames, int red, int blue, int green, int alpha, boolean fade)
     {
         MatrixStack.Entry matrixStackEntry = matrixStack.getLast();
@@ -61,18 +67,27 @@ public final class ClientUtil
         float front = z - zOffset;
         float back = z + zOffset;
 
-        drawQuad(vertexBuilder, matrix4f, matrix3f, left, right, y, top, front, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
-        drawQuad(vertexBuilder, matrix4f, matrix3f, right, left, y, top, back, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
-        drawQuad(vertexBuilder, matrix4f, matrix3f, left, left, y, top, front, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
-        drawQuad(vertexBuilder, matrix4f, matrix3f, right, right, y, top, back, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+        drawVertQuad(vertexBuilder, matrix4f, matrix3f, left, right, y, top, front, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+        drawVertQuad(vertexBuilder, matrix4f, matrix3f, right, left, y, top, back, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+        drawVertQuad(vertexBuilder, matrix4f, matrix3f, left, left, y, top, front, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+        drawVertQuad(vertexBuilder, matrix4f, matrix3f, right, right, y, top, back, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
     }
 
-    public static final void drawQuad(IVertexBuilder vertexBuilder, Matrix4f matrix4f, Matrix3f matrix3f, float x1, float x2, float y1, float y2, float z1, float z2, float xUV1, float xUV2, float yUV1, float yUV2, int red, int blue, int green, int alpha)
+    public static final void drawVertQuad(IVertexBuilder vertexBuilder, Matrix4f matrix4f, Matrix3f matrix3f, float x1, float x2, float y1, float y2, float z1, float z2, float xUV1, float xUV2, float yUV1, float yUV2, int red, int blue, int green, int alpha)
     {
-        drawVertex(vertexBuilder, matrix4f, matrix3f, x2, y1, z2, xUV2, yUV2, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
+        drawQuad(vertexBuilder, matrix4f, matrix3f, x2, x2, x1, x1, y1, y2, y2, y1, z2, z2, z1, z1, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+    }
+
+    public static final void drawHorizQuad(IVertexBuilder vertexBuilder, Matrix4f matrix4f, Matrix3f matrix3f, float x1, float x2, float y1, float y2, float z1, float z2, float xUV1, float xUV2, float yUV1, float yUV2, int red, int blue, int green, int alpha)
+    {
+        drawQuad(vertexBuilder, matrix4f, matrix3f, x2, x2, x1, x1, y2, y2, y1, y1, z1, z2, z2, z1, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+    }
+    public static final void drawQuad(IVertexBuilder vertexBuilder, Matrix4f matrix4f, Matrix3f matrix3f, float x1, float x2, float x3, float x4, float y1, float y2, float y3, float y4, float z1, float z2, float z3, float z4, float xUV1, float xUV2, float yUV1, float yUV2, int red, int blue, int green, int alpha)
+    {
+        drawVertex(vertexBuilder, matrix4f, matrix3f, x1, y1, z1, xUV2, yUV2, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
         drawVertex(vertexBuilder, matrix4f, matrix3f, x2, y2, z2, xUV2, yUV1, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
-        drawVertex(vertexBuilder, matrix4f, matrix3f, x1, y2, z1, xUV1, yUV1, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
-        drawVertex(vertexBuilder, matrix4f, matrix3f, x1, y1, z1, xUV1, yUV2, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
+        drawVertex(vertexBuilder, matrix4f, matrix3f, x3, y3, z3, xUV1, yUV1, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
+        drawVertex(vertexBuilder, matrix4f, matrix3f, x4, y4, z4, xUV1, yUV2, red, blue, green, alpha, 0.0F, 1.0F, 0.0F);
     }
 
     public static final void drawVertex(IVertexBuilder vertexBuilder, Matrix4f matrix4f, Matrix3f matrix3f, float x, float y, float z, float xUV, float yUV, int red, int green, int blue, int alpha, float normalX, float normalY, float normalZ)
