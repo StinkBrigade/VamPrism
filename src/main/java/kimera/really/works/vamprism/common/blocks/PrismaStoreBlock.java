@@ -8,6 +8,7 @@ import kimera.really.works.vamprism.common.tileentity.SunlightPoolTileEntity;
 import kimera.really.works.vamprism.common.util.INeedleInteractable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.BreakableBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,7 @@ import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
 
-public class PrismaStoreBlock extends Block implements INeedleInteractable
+public class PrismaStoreBlock extends AbstractNeedleInteractableBlock
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 24.0D, 16.0D);
 
@@ -47,19 +48,6 @@ public class PrismaStoreBlock extends Block implements INeedleInteractable
         PrismaStoreTileEntity prismaStoreTileEntity = new PrismaStoreTileEntity();
 
         return prismaStoreTileEntity;
-    }
-
-
-    @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
-    {
-        ItemStack mainhandItem = player.getHeldItemMainhand();
-        if(!world.isRemote && mainhandItem.getItem() == ItemRegistry.FANKRYSTAL_NEEDLE.get() && handIn == Hand.MAIN_HAND)
-        {
-            onNeedleInteract(pos, mainhandItem, world,player);
-            return ActionResultType.CONSUME;
-        }
-        return ActionResultType.PASS;
     }
 
     @Override

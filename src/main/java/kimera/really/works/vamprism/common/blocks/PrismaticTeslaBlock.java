@@ -3,10 +3,7 @@ package kimera.really.works.vamprism.common.blocks;
 import kimera.really.works.vamprism.common.items.ItemRegistry;
 import kimera.really.works.vamprism.common.tileentity.PrismaticTeslaTileEntity;
 import kimera.really.works.vamprism.common.util.INeedleInteractable;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -30,7 +27,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class PrismaticTeslaBlock extends Block implements INeedleInteractable
+public class PrismaticTeslaBlock extends AbstractNeedleInteractableBlock
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 32.0D, 16.0D);
 
@@ -55,18 +52,6 @@ public class PrismaticTeslaBlock extends Block implements INeedleInteractable
         PrismaticTeslaTileEntity prismaticTeslaTileEntity = new PrismaticTeslaTileEntity();
 
         return prismaticTeslaTileEntity;
-    }
-
-    @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
-    {
-        ItemStack mainhandItem = player.getHeldItemMainhand();
-        if(!world.isRemote && mainhandItem.getItem() == ItemRegistry.FANKRYSTAL_NEEDLE.get() && handIn == Hand.MAIN_HAND)
-        {
-            onNeedleInteract(pos, mainhandItem, world,player);
-            return ActionResultType.CONSUME;
-        }
-        return super.onBlockActivated(state, world, pos, player, handIn, hit);
     }
 
     @Override
