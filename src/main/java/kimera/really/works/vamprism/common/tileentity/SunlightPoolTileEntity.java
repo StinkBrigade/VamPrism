@@ -20,7 +20,7 @@ public class SunlightPoolTileEntity extends AbstractPrismaLinkerTileEntity
 
     public SunlightPoolTileEntity()
     {
-        super(TileEntityRegistry.SUNLIGHT_POOL.get(), 3, 600.0F, TeslaLinkerState.PRODUCING);
+        super(TileEntityRegistry.SUNLIGHT_POOL.get(), 3, 600.0F, PrismaLinkerState.PRODUCING);
 
         this.prismaIncrement = 2.5F;
     }
@@ -57,6 +57,7 @@ public class SunlightPoolTileEntity extends AbstractPrismaLinkerTileEntity
         this.ticksExisted++;
 
         if(!this.hasWorld()) return;
+
         if(!this.world.isRemote)
         {
             boolean changedFlag = false;

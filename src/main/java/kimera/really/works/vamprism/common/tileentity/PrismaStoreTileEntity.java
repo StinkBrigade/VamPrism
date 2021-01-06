@@ -7,7 +7,7 @@ public class PrismaStoreTileEntity extends AbstractPrismaLinkerTileEntity
 {
     public PrismaStoreTileEntity()
     {
-        super(TileEntityRegistry.PRISMA_STORE.get(), 3, 10000.0F, TeslaLinkerState.STORING);
+        super(TileEntityRegistry.PRISMA_STORE.get(), 3, 10000.0F, PrismaLinkerState.CHANNELING);
     }
 
     @Override

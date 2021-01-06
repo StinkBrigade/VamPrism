@@ -16,21 +16,22 @@ import java.util.List;
 
 public abstract class AbstractPrismaLinkerTileEntity extends AbstractPrismaStorerTileEntity implements IPrismaLinker
 {
-    private TeslaLinkerState linkerState;
+    private PrismaLinkerState linkerState;
 
     private List<BlockPos> connectedLinkerPositions;
     private List<IPrismaLinker> connectedLinkers;
 
     private float transferRate;
 
-    public AbstractPrismaLinkerTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue, TeslaLinkerState defaultState, float transferRate)
+    public AbstractPrismaLinkerTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue, PrismaLinkerState defaultState, float transferRate)
     {
         super(tileEntityTypeIn, valueCount, maxValue);
 
         this.linkerState = defaultState;
+        this.transferRate = transferRate;
     }
 
-    public AbstractPrismaLinkerTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue, TeslaLinkerState defaultState)
+    public AbstractPrismaLinkerTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue, PrismaLinkerState defaultState)
     {
         this(tileEntityTypeIn, valueCount, maxValue, defaultState, IPrismaLinker.DEFAULT_TRANSFER_SPEED);
     }
@@ -70,13 +71,10 @@ public abstract class AbstractPrismaLinkerTileEntity extends AbstractPrismaStore
     {
         for(IPrismaLinker linker : this.getConnectedLinkers())
         {
-            if(linker.getLinkerState().canGiveOutput)
+            // If this Linker can output and the target Linker can accept input
+            if(this.getLinkerState().canGiveOutput && linker.getLinkerState().canTakeInput)
             {
-                IPrismaStorer.handlePrismaTransfer(linker, this, 5.0F, 0.0F);
-            }
-            else if(linker.getLinkerState().canTakeInput)
-            {
-                IPrismaStorer.handlePrismaTransfer(this, linker, 5.0F, 0.0F);
+                IPrismaStorer.handlePrismaTransfer(this, linker, this.getTransferRate(), 0.0F);
             }
         }
     }
@@ -236,13 +234,13 @@ public abstract class AbstractPrismaLinkerTileEntity extends AbstractPrismaStore
     }
 
     @Override
-    public TeslaLinkerState getLinkerState()
+    public PrismaLinkerState getLinkerState()
     {
         return this.linkerState;
     }
 
     @Override
-    public void setLinkerState(TeslaLinkerState state)
+    public void setLinkerState(PrismaLinkerState state)
     {
         this.linkerState = state;
     }

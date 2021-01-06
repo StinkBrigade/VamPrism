@@ -1,6 +1,6 @@
 package kimera.really.works.vamprism.common.tileentity;
 
-public enum TeslaLinkerState
+public enum PrismaLinkerState
 {
     OFF("off", false, false),
     PRODUCING("producing", false, true),
@@ -14,10 +14,10 @@ public enum TeslaLinkerState
     public boolean canTakeInput;
     public boolean canGiveOutput;
 
-    TeslaLinkerState(String stateId, boolean acceptsInput, boolean acceptsOutput)
+    PrismaLinkerState(String stateId, boolean canTakeInput, boolean canGiveOutput)
     {
         this.stateId = stateId;
-        this.canTakeInput = acceptsInput;
-        this.canGiveOutput = acceptsOutput;
+        this.canTakeInput = canTakeInput;
+        this.canGiveOutput = canGiveOutput;
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity implements IPrismaLinker
 {
-    private TeslaLinkerState linkerState;
+    private PrismaLinkerState linkerState;
 
     private List<BlockPos> connectedTeslaPositions;
     private List<PrismaticTeslaTileEntity> connectedTeslas;
@@ -32,7 +32,7 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
         this.transferRate = 15.0F;
         this.lossRate = 0.1F;
 
-        this.linkerState = TeslaLinkerState.CHANNELING;
+        this.linkerState = PrismaLinkerState.CHANNELING;
     }
 
     @Override
@@ -325,13 +325,13 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
     }
 
     @Override
-    public TeslaLinkerState getLinkerState()
+    public PrismaLinkerState getLinkerState()
     {
         return this.linkerState;
     }
 
     @Override
-    public void setLinkerState(TeslaLinkerState state)
+    public void setLinkerState(PrismaLinkerState state)
     {
         this.linkerState = state;
     }

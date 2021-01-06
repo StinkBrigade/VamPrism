@@ -14,6 +14,6 @@ public interface IPrismaLinker extends IPrismaStorer
     float getTransferRate();
     void setTransferRate(float transferRate);
 
-    TeslaLinkerState getLinkerState();
-    void setLinkerState(TeslaLinkerState state);
+    PrismaLinkerState getLinkerState();
+    void setLinkerState(PrismaLinkerState state);
 }
