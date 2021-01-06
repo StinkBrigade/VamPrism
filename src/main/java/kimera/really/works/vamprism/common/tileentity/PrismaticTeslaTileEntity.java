@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +19,7 @@ import org.apache.logging.log4j.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity implements ITickableTileEntity
+public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity
 {
     private List<BlockPos> connectedTeslaPositions;
     private List<BlockPos> connectedLinkerPositions;
@@ -81,6 +80,8 @@ public class PrismaticTeslaTileEntity extends AbstractPrismaStorerTileEntity imp
             processConnectedTeslas();
             processConnectedLinkers();
         }
+
+        super.tick();
     }
 
     private void processConnectedTeslas()

@@ -3,14 +3,13 @@ package kimera.really.works.vamprism.common.tileentity;
 import kimera.really.works.vamprism.common.blocks.SunlightPoolBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraftforge.common.extensions.IForgeTileEntity;
 
-public class SunlightPoolTileEntity extends AbstractTeslaLinkerTileEntity implements ITickableTileEntity
+public class SunlightPoolTileEntity extends AbstractTeslaLinkerTileEntity
 {
     private float prismaIncrement;
 
@@ -76,18 +75,25 @@ public class SunlightPoolTileEntity extends AbstractTeslaLinkerTileEntity implem
                 changedFlag = true;
             }
 
+            if(this.enabled)
+            {
+                this.collectPrisma();
+            }
+
             if(changedFlag)
             {
                 this.world.setBlockState(this.getPos(), this.getBlockState().with(SunlightPoolBlock.ENABLED, this.enabled), 3);
 
                 this.markDirty();
             }
+            else if(this.enabled)
+            {
+                this.markForBufferUpdate();
+            }
         }
 
         if(this.enabled)
         {
-            collectPrisma();
-
             if(alphaValue < 255)
             {
                 alphaValue += 8;
@@ -105,6 +111,8 @@ public class SunlightPoolTileEntity extends AbstractTeslaLinkerTileEntity implem
                 alphaValue = 0;
             }
         }
+
+        super.tick();
     }
 
     public void collectPrisma()

@@ -1,25 +1,34 @@
 package kimera.really.works.vamprism.common.tileentity;
 
+import kimera.really.works.vamprism.common.network.PacketHandler;
+import kimera.really.works.vamprism.common.network.PacketPrismaBufferUpdate;
 import kimera.really.works.vamprism.common.util.IPrismaStorer;
 import kimera.really.works.vamprism.common.util.PrismaStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractPrismaStorerTileEntity extends TileEntity implements IPrismaStorer
+public abstract class AbstractPrismaStorerTileEntity extends TileEntity implements IPrismaStorer, ITickableTileEntity
 {
     protected final PrismaStorage prismaStorage;
+
+    // A dirty flag to signify that the storer's values have updated, for client-side rendering.
+    protected boolean markedForBufferUpdate;
 
     public AbstractPrismaStorerTileEntity(TileEntityType<?> tileEntityTypeIn, int valueCount, float maxValue)
     {
         super(tileEntityTypeIn);
 
-        prismaStorage = new PrismaStorage(valueCount, maxValue);
+        this.prismaStorage = new PrismaStorage(valueCount, maxValue);
+        this.markedForBufferUpdate = false;
     }
 
     @Override @Nullable
@@ -67,6 +76,17 @@ public abstract class AbstractPrismaStorerTileEntity extends TileEntity implemen
         this.getInternalStorage().writeNBT(parentNBTTagCompound);
 
         return parentNBTTagCompound;
+    }
+
+    @Override
+    public void tick()
+    {
+        if(!this.world.isRemote && this.markedForBufferUpdate)
+        {
+            this.markedForBufferUpdate = false;
+
+            this.sendBufferUpdate();
+        }
     }
 
     @Override
@@ -148,6 +168,34 @@ public abstract class AbstractPrismaStorerTileEntity extends TileEntity implemen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void markForBufferUpdate()
+    {
+        this.markedForBufferUpdate = true;
+    }
+
+    @Override
+    public void sendBufferUpdate()
+    {
+        float[] prismaValues = new float[this.prismaStorage.getValueCount()];
+        for(int i = 0; i < prismaValues.length; i++)
+        {
+            prismaValues[i] = this.getCurrentPrismaValue(i);
+        }
+
+        Chunk chunk = this.world.getChunkAt(this.getPos());
+        PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new PacketPrismaBufferUpdate(this.getPos(), prismaValues));
+    }
+
+    @Override
+    public void updateBufferOnClient(float[] prismaValues)
+    {
+        for(int i = 0; i < prismaValues.length; i++)
+        {
+            this.setCurrentPrismaValue(i, prismaValues[i]);
+        }
     }
 
     public abstract int getTileEntityId();

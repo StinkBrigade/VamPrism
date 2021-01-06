@@ -18,6 +18,10 @@ public interface IPrismaStorer
 
     boolean transferPrismaTo(IPrismaStorer target, int index, float amount, float loss);
 
+    void markForBufferUpdate();
+    void sendBufferUpdate();
+    void updateBufferOnClient(float[] prismaValues);
+
     static boolean handlePrismaTransfer(IPrismaStorer from, IPrismaStorer to, float amount, float loss)
     {
         boolean transferSuccessful = false;
@@ -26,6 +30,8 @@ public interface IPrismaStorer
             if(from.transferPrismaTo(to, i, amount, loss))
             {
                 transferSuccessful = true;
+                from.markForBufferUpdate();
+                to.markForBufferUpdate();
             }
         }
         return transferSuccessful;
