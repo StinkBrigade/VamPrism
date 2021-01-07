@@ -67,8 +67,8 @@ public final class ClientUtil
         float front = z - zOffset;
         float back = z + zOffset;
 
-        drawVertQuad(vertexBuilder, matrix4f, matrix3f, left, right, y, top, front, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
-        drawVertQuad(vertexBuilder, matrix4f, matrix3f, right, left, y, top, back, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+        drawVertQuad(vertexBuilder, matrix4f, matrix3f, right, left, y, top, front, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
+        drawVertQuad(vertexBuilder, matrix4f, matrix3f, left, right, y, top, back, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
         drawVertQuad(vertexBuilder, matrix4f, matrix3f, left, left, y, top, front, back, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
         drawVertQuad(vertexBuilder, matrix4f, matrix3f, right, right, y, top, back, front, xUV1, xUV2, yUV1, yUV2, red, blue, green, alpha);
     }
